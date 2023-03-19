@@ -1,10 +1,10 @@
 # Create simple dataset from games using huggingface tokenizer
+# games.txt will include a list of 10 games in PGN format
 
 from read_games import read_games
 from transformers import GPT2Tokenizer, TextDataset
-from sklearn.model_selection import train_test_split
 
-games = read_games("../lichess_db_2.pgn", "games.txt" , 10) # read 10 games
+games = read_games("../lichess_db_2.pgn", 10, True, "games.txt") # read 10 games
 
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2') # load tokenizer
 
