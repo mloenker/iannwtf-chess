@@ -3,15 +3,6 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
 
 
-def load_dataset(file_path, tokenizer, block_size = 128): ##Might not be necessary
-    dataset = TextDataset(
-        tokenizer = tokenizer,
-        file_path = file_path,
-        block_size = block_size,
-    )
-    return dataset
-
-
 def load_data_collator(tokenizer, mlm = False):  ##Might not be necessary
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer, 
@@ -20,35 +11,24 @@ def load_data_collator(tokenizer, mlm = False):  ##Might not be necessary
     return data_collator
 
 
-def train(train_file_path,model_name,
-          output_dir,
-          overwrite_output_dir,
-          per_device_train_batch_size,
-          num_train_epochs,
-          save_steps):
-  tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-  train_dataset = load_dataset(train_file_path, tokenizer)
-  data_collator = load_data_collator(tokenizer)
+def train(model, tokenizer, train_dataset, data_collator, output_dir, per_device_train_batch_size, num_train_epochs, save_steps):      
+    tokenizer.save_pretrained(output_dir)
+    model.save_pretrained(output_dir)
 
-  tokenizer.save_pretrained(output_dir)
-      
-  model = GPT2LMHeadModel.from_pretrained(model_name)
+    training_args = TrainingArguments(
+        output_dir=output_dir,
+        overwrite_output_dir=True,
+        per_device_train_batch_size=per_device_train_batch_size,
+        num_train_epochs=num_train_epochs,
+        save_steps=save_steps
+    )
 
-  model.save_pretrained(output_dir)
-
-  training_args = TrainingArguments(
-          output_dir=output_dir,
-          overwrite_output_dir=overwrite_output_dir,
-          per_device_train_batch_size=per_device_train_batch_size,
-          num_train_epochs=num_train_epochs,
-      )
-
-  trainer = Trainer(
-          model=model,
-          args=training_args,
-          data_collator=data_collator,
-          train_dataset=train_dataset,
-  )
-      
-  trainer.train()
-  trainer.save_model()
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        data_collator=data_collator,
+        train_dataset=train_dataset,
+    )
+        
+    trainer.train()
+    trainer.save_model()

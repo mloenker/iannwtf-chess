@@ -8,11 +8,11 @@ games = read_games("../lichess_db_2.pgn", 10, True, "games.txt") # read 10 games
 
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2') # load tokenizer
 
-def create_dataset(file_path, tokenizer): # create dataset from games
+def create_dataset(file_path, tokenizer, block_size=96): # create dataset from games
     dataset = TextDataset(
         tokenizer = tokenizer,
         file_path = file_path,
-        block_size=96,
-        overwrite_cache=True
+        block_size = block_size,
+        overwrite_cache = True
     )
     return dataset
