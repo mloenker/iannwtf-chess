@@ -5,3 +5,5 @@ tags: []
 ---
 
 ## Add stuff ##
+
+create_eval_startpos = contains all functions needed to create the start positions for evaluation (NOTE: train_ds and test_ds not declared yet in create_dataset)
