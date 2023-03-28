@@ -7,6 +7,7 @@ tags: []
 ## Installation requirements 
 ```
 pip install chess
+pip install transformers
 pip install tabulate
 ```
 
