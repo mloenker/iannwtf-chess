@@ -1,9 +1,3 @@
----
-noteId: "43a526b0c73e11ed831d75bf08c9e6d9"
-tags: []
-
----
-
 ## Installation requirements 
 ```
 pip install chess
@@ -26,3 +20,25 @@ pip install tabulate
 | create_eval_startpos | all functions needed to create the start positions for evaluation |
 
 *** we still need to split dataset into train_ds and test_ds (in create_dataset)
+
+## Demo
+Load the model
+```python
+from model import Model
+from game import Game
+
+model = Model("gpt2") # load the base gpt2 model
+model.add_vocab("lan_vocab.txt") # add_vocab is required for LAN models
+model.load("model_28") # load a finetuned model from files
+```
+Play a game against the model
+```python
+game = Game(model,
+	model_format="lan", # model format; use either "san"/"pgn" or "lan"/"uci"
+	human_start=True, # who makes the first move; if you start from the base position the human must always make the first move
+	start_position="8/8/8/2k5/4K3/8/8/8 w - - 4 45" # leave empty if you want to start from the base position; format is FEN
+)
+game.play()
+```
+![output](https://user-images.githubusercontent.com/103146401/228558749-8e2f89e3-e08f-4bf7-a817-5287f5f89f58.svg)
+
