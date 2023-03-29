@@ -3,7 +3,10 @@ import chess.pgn
 
 class Game:
     def __init__(self, model, model_format="lan", human_start=True, start_position=None):
-        self.board = chess.Board()
+        if start_position == None:
+            self.board = chess.Board()
+        else: # Play from any position
+            self.board = chess.Board(fen=start_position)
         self.model = model
         self.model_format = model_format
         self.human_turn = human_start # True if human has first move, False if AI starts
