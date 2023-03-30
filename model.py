@@ -15,7 +15,7 @@ class Model:
             mlm=False
         )
 
-    def train(self, train_dataset, eval_dataset, output_dir, per_device_train_batch_size, num_train_epochs, save_steps):
+    def train(self, train_dataset, eval_dataset, output_dir, per_device_train_batch_size, num_train_epochs, save_steps, eval_steps, warmup_steps=0):
         '''
         POTENTIALLY NEEDS TO BE UPDATED TO INCLUDE A VALIDATION DATASET
         save_steps: number of steps after which a copy of the model is saved, might be useful for evaluation
@@ -28,8 +28,12 @@ class Model:
             overwrite_output_dir=True,
             per_device_train_batch_size=per_device_train_batch_size,
             num_train_epochs=num_train_epochs,
+            warmup_steps=warmup_steps,
+            save_strategy="steps",
+            evaluation_strategy="steps",
+            logging_strategy="steps",
             save_steps=save_steps,
-            warmup_steps=1000
+            eval_steps=eval_steps
         )
 
         trainer = Trainer(
@@ -37,7 +41,7 @@ class Model:
             args=training_args,
             data_collator=self.data_collator,
             train_dataset=train_dataset,
-            eval_dataset = eval_dataset
+            eval_dataset=eval_dataset
         )
             
         trainer.train()
