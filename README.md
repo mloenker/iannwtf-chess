@@ -19,7 +19,8 @@ pip install tabulate
 | test_play_game.ipynb | Example output of trained model |
 | create_eval_startpos | all functions needed to create the start positions for evaluation |
 
-*** we still need to split dataset into train_ds and test_ds (in create_dataset)
+*** code in test_train_model.py not necessary as separe file??? Included pure code in main_PGN_model.ipynb
+*** what is the functionality of Finetuning.ipynb?
 
 ## Demo
 Load the model
