@@ -27,11 +27,14 @@ def generate_common_openings(num_games, training_data):
     #add opening 
     openings.append(opening)
   #count opening occurrences 
-  occ = {i:openings.count(i) for i in openings}
+  occ = Counter(openings)
+  occ_sorted = Counter(occ)
   #select most common openings as startpositions
-  eval_startpos = sorted(occ, key=occ.get, reverse=True)[:num_games]
+  eval_startpos = occ_sorted.most_common(num_games)
+  #remove the count
+  eval_startpos = [pos for pos,count in eval_startpos]
   return eval_startpos
-
+  
 def generate_startpos(num_games, num_moves, testing_data):
   """
   Generates all start positions needed for model evaluation 2 and 3
