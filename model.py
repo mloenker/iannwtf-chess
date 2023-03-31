@@ -1,6 +1,7 @@
 from transformers import DataCollatorForLanguageModeling
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import Trainer, TrainingArguments
+from transformers import AdamW
 
 
 class Model:
@@ -17,8 +18,9 @@ class Model:
 
     def train(self, train_dataset, eval_dataset, output_dir, per_device_train_batch_size, num_train_epochs, save_steps, eval_steps, warmup_steps=0):
         '''
-        POTENTIALLY NEEDS TO BE UPDATED TO INCLUDE A VALIDATION DATASET
         save_steps: number of steps after which a copy of the model is saved, might be useful for evaluation
+        eval_steps: number of steps after which the model is evaluated on the eval dataset
+        warmup_steps: number of steps for the learning rate warmup
         '''
         self.tokenizer.save_pretrained(output_dir)
         self.model.save_pretrained(output_dir)
@@ -33,7 +35,8 @@ class Model:
             evaluation_strategy="steps",
             logging_strategy="steps",
             save_steps=save_steps,
-            eval_steps=eval_steps
+            eval_steps=eval_steps,
+            optim='adamw_torch'
         )
 
         trainer = Trainer(
@@ -41,7 +44,7 @@ class Model:
             args=training_args,
             data_collator=self.data_collator,
             train_dataset=train_dataset,
-            eval_dataset=eval_dataset
+            eval_dataset=eval_dataset,
         )
             
         trainer.train()
