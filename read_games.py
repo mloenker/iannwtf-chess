@@ -4,7 +4,7 @@ def read_games(raw_file_path, number_of_games, format="pgn", write_to_file=True,
     number_of_games = number_of_games + startpoint
     with open(raw_file_path, 'r') as file:
         games = []
-        if format == "pgn":
+        if format == "pgn" or format == "san":
             for line in file:
                 if line[0] == "[": continue # remove metadata
                 elif line == '\n': continue # remove empty lines
