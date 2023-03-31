@@ -40,46 +40,80 @@ def generate_game(model, tokenizer, startpos, n_tokens=30):
   game = [ x for x in output if "." not in x ]
   return game, output
 
-def validation(n_valid, model, tokenizer, startpos, board, n_tokens=30):
+def validation(n_valid, model, tokenizer, startpos, n_moves, board):
   """
     Generates game until first illegal move, returns # of legal moves and illegal move in SAN
       - n_valid = current amount of valid moves generated
       - model = model used to generate game
       - tokenizer = tokenizer used for encoding and decoding
       - startpos = single input sequence leading to current board state in SAN
+      - n_moves = amount of moves that should be generated
       - board = chess board object
-      - n_tokens = amount of tokens that should be generated
   """
   valid = True
   #generate game 
-  moves, movesWnr = generate_game(model, tokenizer, startpos)
+  moves, movesWnr = generate_game(model, tokenizer, startpos, n_moves)
   #check generated moves
   for move in moves:
-    #check if move notation is legal
+    #check if move is result
+    if move == "1-0\n" or move == "1-0" or move == "0-1\n" or move == "0-1":
+      #check if game finished
+      if board.is_game_over():
+        #check result
+        if board.result() == move[:3]:
+          #whole game correctly generated
+          n_valid += 1
+          illegal_move = None
+          type_illegal = None
+          valid = False
+          break
+        else:
+          illegal_move = move
+          type_illegal = "Wrong result"
+          valid = False
+          break
+      else:
+        illegal_move = move
+        type_illegal = "No game over"
+        valid = False
+        break
+    #check if move is correct
     try:
       p_move = str(board.parse_san(move))
-    except (chess.IllegalMoveError, chess.AmbiguousMoveError, chess.InvalidMoveError):
+    except chess.InvalidMoveError:
+      illegal_move = move
+      type_illegal = "Invalid move"
+      valid = False
+      break
+    except chess.IllegalMoveError:
+      illegal_move = move
+      type_illegal = "Illegal move"
+      valid = False
+      break
+    except chess.AmbiguousMoveError: 
+      illegal_move = move
+      type_illegal = "Ambiguous move"
+      valid = False
+      break
+    except ValueError:
       illegal_move = move
       type_illegal = "Wrong notation"
       valid = False
       break
-    #find all legal moves in current position
-    legal = [move.uci() for move in board.legal_moves]
-    #check if move is possible at current board state
-    if p_move in legal:
-      n_valid += 1
-      board.push_san(move)
-    else:
+    except Exception:
       illegal_move = move
-      type_illegal = "Wrong arrangement"
+      type_illegal = "Unknown error"
       valid = False
       break
+    #make correct move
+    n_valid += 1
+    board.push_san(move)
   #generate + check more moves if necessary
   if valid == True:
     #update start position
     startpos = startpos+movesWnr
     #recursion
-    n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos, board, n_tokens)
+    n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos, n_moves, board)
   return n_valid, illegal_move, type_illegal
 
 def test_game(model, tokenizer, startpos, n_tokens = 30):
