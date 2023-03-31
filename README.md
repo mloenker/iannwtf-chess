@@ -23,13 +23,10 @@ pip install tabulate
 | model.py | model class; includes functions for training and generating |
 | game.py | game class; play games against the model |
 | create_eval_startpos.py | all functions needed to create the start positions for evaluation |
-| create_eval_visual.py | graph creation for evaluation |
+| eval_funcs.py | all functions needed for evaluation |
+| create_eval_visual.py | graph and table creation for evaluation |
+| main_PGN_model.py | all code needed to train and evaluate the SAN model ****NEEDS CHANGE???****|
 | lan_vocab.txt | added vocabulary for LAN model |
-
-## Remaining things to discuss
-*** code in test_train_model.py not necessary as separe file??? Included pure code in main_PGN_model.ipynb <br>
-*** what is the functionality of Finetuning.ipynb? <br>
-*** main_PGN_model.py was not tested in this environment yet (code - not imports - was copied from Jupyter Notebooks). It might be wise to switch to .ipynb format for the visualizations.
 
 ## Demo
 Load the model
