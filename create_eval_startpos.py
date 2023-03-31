@@ -35,6 +35,7 @@ def generate_common_openings(num_games, training_data):
   eval_startpos = [pos for pos,count in eval_startpos]
   return eval_startpos
   
+
 def generate_startpos(num_games, num_moves, testing_data):
   """
   Generates all start positions needed for model evaluation 2 and 3
