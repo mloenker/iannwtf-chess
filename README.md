@@ -3,7 +3,7 @@ We finetuned two GPT2-small models using PGN data from lichess.org. Both models 
 
 The [SAN Model](https://www.mediafire.com/file/rubrdho1go52rde/model_san.zip/file) uses standard algebraic notation and makes illegal moves around move 10.
 
-The [LAN Model](http://www.mediafire.com/file/o4tfjk3rbi954d2/model_lan.zip) uses long algebraic notation and will always find a legal using constrained beam search.
+The [LAN Model](http://www.mediafire.com/file/o4tfjk3rbi954d2/model_lan.zip) uses long algebraic notation and will always find a legal move using constrained beam search.
 
 ## Installation requirements 
 ```
