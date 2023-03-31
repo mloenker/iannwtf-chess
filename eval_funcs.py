@@ -17,7 +17,7 @@ def prepare_startpos(seq):
   moves = np.delete(moves, np.arange(0, moves.size, 3))
   return moves_with_nr, moves
 
-def generate_game(model, tokenizer, startpos, n_tokens=30):
+def generate_game(model, tokenizer, startpos, n_tokens):
   """
     Model generates a game of a predefined number of moves from a given startposition
       - model = model used to generate game
@@ -28,7 +28,7 @@ def generate_game(model, tokenizer, startpos, n_tokens=30):
   #prepare prompt: convert list back into single string
   prompt = ' '.join(startpos)
   #generate game
-  output = model.generate(prompt=prompt,max_new_tokens=n_tokens,num_return_sequences=1)
+  output = model.generate(prompt=prompt,max_new_tokens=n_tokens,num_return_sequences=1) 
   #split game into moves
   output = output[0].split(" ")
   #remove startposition
@@ -40,19 +40,19 @@ def generate_game(model, tokenizer, startpos, n_tokens=30):
   game = [ x for x in output if "." not in x ]
   return game, output
 
-def validation(n_valid, model, tokenizer, startpos, n_moves, board):
+def validation(n_valid, model, tokenizer, startpos, n_tokens, board):
   """
     Generates game until first illegal move, returns # of legal moves and illegal move in SAN
       - n_valid = current amount of valid moves generated
       - model = model used to generate game
       - tokenizer = tokenizer used for encoding and decoding
       - startpos = single input sequence leading to current board state in SAN
-      - n_moves = amount of moves that should be generated
+      - n_tokens = amount of tokens that should be generated
       - board = chess board object
   """
   valid = True
   #generate game 
-  moves, movesWnr = generate_game(model, tokenizer, startpos, n_moves)
+  moves, movesWnr = generate_game(model, tokenizer, startpos, n_tokens)
   #check generated moves
   for move in moves:
     #check if move is result
@@ -113,10 +113,10 @@ def validation(n_valid, model, tokenizer, startpos, n_moves, board):
     #update start position
     startpos = startpos+movesWnr
     #recursion
-    n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos, n_moves, board)
+    n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos, n_tokens, board)
   return n_valid, illegal_move, type_illegal
 
-def test_game(model, tokenizer, startpos, n_tokens = 30):
+def test_game(model, tokenizer, startpos, n_tokens):
   """
     Testing the model on a specific input
        - model = model that gets tested
@@ -132,10 +132,10 @@ def test_game(model, tokenizer, startpos, n_tokens = 30):
   for move in startpos:
     board.push_san(move)
   #check generated game
-  n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos_with_nr, board, n_tokens)
+  n_valid, illegal_move, type_illegal = validation(n_valid, model, tokenizer, startpos_with_nr, n_tokens, board)
   return n_valid, illegal_move, type_illegal
 
-def test(model, tokenizer, startpos, n_tokens=30):
+def test(model, tokenizer, startpos, n_tokens):
   """
     Testing the model on all start positions of a evaluation metric
        - model = model that gets tested
@@ -156,15 +156,15 @@ def test(model, tokenizer, startpos, n_tokens=30):
   avg_valid = sum(global_n_valid) / len(global_n_valid)
   return avg_valid, global_n_valid, global_illegal_move, global_type_illegal
 
-def eval(train_ds, test_ds, model, tokenizer, startpos, n_tokens=30):
+def eval(train_ds, test_ds, model, tokenizer, n_tokens, startpos):
   """
     Evaluation of one model at a specific training time
       - train_ds = dataset containing training data
       - test_ds = dataset containing test data
       - model = model that was saved during training
       - tokenizer = tokenizer used for encoding and decoding
-      - startpos = list of all start positions
       - n_tokens = amount of tokens that should be generated
+      - startpos = list of all start positions
   """
   #test the model on all startpositions
   print("Start test for eval 1")
@@ -184,15 +184,15 @@ def eval(train_ds, test_ds, model, tokenizer, startpos, n_tokens=30):
   global_type_illegal = [global_type_illegal1, global_type_illegal2, global_type_illegal3, global_type_illegal4, global_type_illegal5] #contains the type of illegal move of each generated game
   return evals, global_n_valid, global_illegal_move, global_type_illegal
 
-def global_eval(train_ds, test_ds, models, tokenizer, steps, n_tokens=30):
+def global_eval(train_ds, test_ds, models, tokenizer, n_tokens, steps):
   """
     Evaluation of all models
       - train_ds = dataset containing training data
       - test_ds = dataset containing test data
       - models = list of all models that were saved during training
       - tokenizer = tokenizer used for encoding and decoding
-      - steps = list of # of training steps each model was trained on
       - n_tokens = amount of tokens that should be generated
+      - steps = list of # of training steps each model was trained on
   """
   m_evals = []
   m_global_n_valid = []
@@ -212,7 +212,7 @@ def global_eval(train_ds, test_ds, models, tokenizer, steps, n_tokens=30):
   #evaluate all models
   for model in models:
     print("Evaluate new model"+"\n")
-    evals, global_n_valid, global_illegal_move, global_type_illegal = eval(train_ds, test_ds, model, tokenizer, startpos, n_tokens)
+    evals, global_n_valid, global_illegal_move, global_type_illegal = eval(train_ds, test_ds, model, tokenizer, n_tokens, startpos)
     #save data
     m_evals.append(evals)
     m_global_n_valid.append(global_n_valid)
