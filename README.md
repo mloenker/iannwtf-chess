@@ -10,14 +10,13 @@ pip install tabulate
 | ------------- | ------------- |
 | project_report.pdf | our project report including all sources |
 | meeting_summary.pdf | summary of contents discussed in the meeting(s) with tutor |
-| read_games.py | function to remove all unnecessary information from the game transcripts & combine data from multiple sources into one file |
-| create_dataset.py | function to create the dataset from game transcripts |
-| games.txt | example dataset |
-| model.py | functions for training and testing the model |
-| test_train_model.py | main code |
-| test_game_stats.ipynb | analyse of game data |
-| test_play_game.ipynb | Example output of trained model |
-| create_eval_startpos | all functions needed to create the start positions for evaluation |
+| read_games.py | read either SAN or LAN notation from PGN files and store the games |
+| create_dataset.py | create dataset from stored games |
+| model.py | model class; includes functions for training and generating |
+| game.py | game class; play games against the model |
+| create_eval_startpos.py | all functions needed to create the start positions for evaluation |
+| create_eval_visual.py | graph creation for evaluation |
+| lan_vocab.txt | added vocabulary for LAN model |
 
 ## Remaining things to discuss
 *** code in test_train_model.py not necessary as separe file??? Included pure code in main_PGN_model.ipynb <br>
