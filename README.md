@@ -45,5 +45,7 @@ game = Game(model,
 )
 game.play()
 ```
+## Video Presentation
+https://youtu.be/-k4zUMLxvwA
 
 
