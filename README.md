@@ -25,7 +25,6 @@ pip install tabulate
 | create_eval_startpos.py | all functions needed to create the start positions for evaluation |
 | eval_funcs.py | all functions needed for evaluation |
 | create_eval_visual.py | graph and table creation for evaluation |
-| main_PGN_model.py | all code needed to train and evaluate the SAN model ****NEEDS CHANGE???****|
 | lan_vocab.txt | added vocabulary for LAN model |
 
 ## Demo
