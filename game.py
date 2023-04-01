@@ -18,28 +18,36 @@ class Game:
         display(self.board) # Display the board position in a nice way
         print("Board position: ", self.get_board_position(self.model_format)) # Print board position in notation (this is what the model sees)
 
-        try:
-            move = self.get_move(self.human_turn)
-        except:
-            print("Invalid move text! Please use SAN or LAN notation.")
-            
+        
+        move = self.get_move(self.human_turn)
+
         if move in self.board.legal_moves:
             self.board.push(move) # MAKE THE MOVE (most important line of code)
             self.human_turn = not self.human_turn # Switch turns
-        else:
-            print("Invalid move! Please try again.")
 
-        if not self.board.is_game_over(): # Check if the game is over, if not play the next round
-            self.play()
+            if not self.board.is_game_over(): # Check if the game is over, if not play the next round
+                self.play()
+            else:
+                display(self.board)
+                print("Game over!")
+
         else:
-            print("Game over!")
+            display(self.board)
+            print("An invalid move was made and the game has ended.")
+
+
 
                 
     def get_move(self, human_turn):
         # Get move from human
         if human_turn:
-            move_text = str(input("Your move: "))
-            move = self.board.parse_san(move_text)
+            try:
+                move_text = str(input("Your move: "))
+                move = self.board.parse_san(move_text)
+            except:
+                print("Invalid move text! Please try again.")
+                move_text = str(input("Your move: "))
+                move = self.board.parse_san(move_text)
             return move
         # Get move from AI
         else:
