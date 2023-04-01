@@ -57,7 +57,10 @@ class Game:
                 for move in moves:
                     move = move.replace(board_position+" ", "") # Keep only the newly generated string
                     move = move.split(" ")[0] # The first move in the string is the new move
-                    move = self.board.parse_san(move)
+                    try:
+                        move = self.board.parse_san(move)
+                    except:
+                        continue
                     if move in self.board.legal_moves:
                         return move
             elif self.model_format == "lan" or self.model_format == "uci":
@@ -73,8 +76,8 @@ class Game:
                 move = self.board.parse_san(move)
                 return move
             else: # If model uses PGN/SAN format, we cannot use constrained beam search, as moves consist of multiple tokens
-                print("The model was not able to find a legal move. It will now resign.")
-                return self.board.resign()
+                #yprint("The model was not able to find a legal move. It will now resign.")
+                raise(ValueError("The model was not able to find a legal move."))
             
     def get_board_position(self, format):
         if format == "uci" or format == "lan": # Return the board position in LAN notation
